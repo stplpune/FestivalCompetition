@@ -89,6 +89,44 @@ namespace GaneshFestival.Controllers
             }
             return Ok(responseDetails);
         }
+        [HttpPost]
+        public async Task<IActionResult> AddCompetiton(CompetitionModel competition)
+        {
+            BaseResponseStatus responseDetails = new BaseResponseStatus();
+            try
+            {
+                var jobpostdetails = await competitionAsyncRepository.AddCompetiton(competition);
+                if (jobpostdetails > 0)
+                {
+                    var returnStr = string.Format("Data added Succesfully..");
+                    logger.LogInformation(returnStr);
+                    logger.LogDebug(string.Format("CompetitionController-Create : Completed Adding record with Id."));
+                    responseDetails.StatusCode = StatusCodes.Status200OK.ToString();
+                    responseDetails.StatusMessage = returnStr;
+                    responseDetails.ResponseData = jobpostdetails;
+                    return Ok(responseDetails);
+                }
+                else
+                {
+                    var msgStr = string.Format("Error while adding record.");
+                    logger.LogInformation(msgStr);
+                    responseDetails.StatusCode = StatusCodes.Status409Conflict.ToString();
+                    responseDetails.StatusMessage = msgStr;
+                    return Ok(responseDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                //log error
+                logger.LogError(ex.Message);
+                var returnMsg = string.Format(ex.Message);
+                logger.LogInformation(returnMsg);
+                responseDetails.StatusCode = StatusCodes.Status409Conflict.ToString();
+                responseDetails.StatusMessage = returnMsg;
+                return Ok(responseDetails);
+            }
+        }
+
 
     }
 }
