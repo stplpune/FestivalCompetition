@@ -3,6 +3,7 @@ using GaneshFestival.Model;
 using GaneshFestival.Repository.Interface;
 using System.Data.Common;
 using System.Text;
+using XSystem.Security.Cryptography;
 
 namespace GaneshFestival.Repository
 {
@@ -15,7 +16,7 @@ namespace GaneshFestival.Repository
         private string Authorization_PayU;
         public string BkdLocationEditTime_Min;
 
-        public DbConnection SqlReaderConnection { get; private set; }
+     //  public DbConnection SqlReaderConnection { get; private set; }
 
         public CompetitionPaymentAsyncRepository(IConfiguration configuration) : base(configuration)
         {
@@ -46,7 +47,7 @@ namespace GaneshFestival.Repository
             string Msg = null;
             string PaymentStatus = null;
             IsApproved = true;
-            using (DbConnection dbConnection = SqlReaderConnection)
+            using (DbConnection dbConnection = sqlreaderConnection)
             {
                 await dbConnection.OpenAsync();
 
@@ -657,7 +658,7 @@ namespace GaneshFestival.Repository
         {
             List<PayUCredentials> payUCredentials = null;
 
-            using (DbConnection dbConnection = SqlReaderConnection)
+            using (DbConnection dbConnection = sqlreaderConnection)
             {
                 await dbConnection.OpenAsync();
                 var sqlQuery = string.Format(@"       declare @key varchar(200)                                      

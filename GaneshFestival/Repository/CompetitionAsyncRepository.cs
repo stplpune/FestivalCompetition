@@ -82,13 +82,17 @@ namespace GaneshFestival.Repository
                     foreach (CompetitionMember member in CompetitionMembers)
                     {
 
-                        member.CompetitionId = id;
-                        //skill.SkillId = id;
-                        
-                     var query1 = @"Insert into tblCompetitionMembers(CompetitionId,DesignationId,PersonName,MobileNo,IsDeleted)
+                        try
+                        {
+                            member.CompetitionId = id;
+                            //skill.SkillId = id;
+
+                            var query1 = @"Insert into tblCompetitionMembers(CompetitionId,DesignationId,PersonName,MobileNo,IsDeleted)
                                        values(@CompetitionId,@DesignationId,@PersonName,@MobileNo,0)";
 
-                        var res = await dbConnection.ExecuteAsync(query1, member);
+                            var res = await dbConnection.ExecuteAsync(query1, member);
+                        }
+                        catch (Exception) { }
                     }
                 }
                 return result;
@@ -103,11 +107,15 @@ namespace GaneshFestival.Repository
                 {
                     foreach (CompettionImages images in compettionImages)
                     {
-                   
-                        images.CompetitionId = id;
-                        var query1 = @"Insert into tblCompetitionImages(CompetitionId,ImagePath,IsMainImage,IsImage,IsDeleted)
+                        try
+                        {
+
+                            images.CompetitionId = id;
+                            var query1 = @"Insert into tblCompetitionImages(CompetitionId,ImagePath,IsMainImage,IsImage,IsDeleted)
                                        values(@EventId,@ImagePath,@IsMainImage,@IsImage,0)";
-                        var res = await dbConnection.ExecuteAsync(query1, images);
+                            var res = await dbConnection.ExecuteAsync(query1, images);
+                        }
+                        catch (Exception) { }
                     }
                 }
                 return result;

@@ -54,6 +54,10 @@ builder.Services.AddCors(options =>
 //builder.Services.AddScoped<IRequestDemoAsyncRepository, RequestDemoAsyncRepository>();
 //builder.Services.AddScoped<IGallaryAsyncRepository, GallaryAsyncRepository>();
 builder.Services.AddScoped<ICompetitionAsyncRepository, CompetitionAsyncRepository>();
+builder.Services.AddScoped<ILoginAsyncRepository, LoginAsyncRepository>();
+builder.Services.AddScoped<ICompetitionPaymentAsyncRepository, CompetitionPaymentAsyncRepository>();
+
+
 
 
 
