@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging.EventLog;
 using Microsoft.OpenApi.Models;
-//using stpl_website_api.Repository;
-//using stpl_website_api.Repository.Interface;
-//using Swashbuckle.Swagger;
+using GaneshFestival.Repository;
+using GaneshFestival.Repository.Interface;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,13 +53,13 @@ builder.Services.AddCors(options =>
 //builder.Services.AddScoped<IDashBoardAsyncRepository, DashBoardAsyncRepository>();
 //builder.Services.AddScoped<IRequestDemoAsyncRepository, RequestDemoAsyncRepository>();
 //builder.Services.AddScoped<IGallaryAsyncRepository, GallaryAsyncRepository>();
-//builder.Services.AddScoped<IFeedbackAsyncRepository, FeedbackAsyncRepository>();
+builder.Services.AddScoped<ICompetitionAsyncRepository, CompetitionAsyncRepository>();
 
 
 
 
 
-//builder.Services.AddSingleton<BaseAsyncRepository>();
+builder.Services.AddSingleton<BaseAsyncRepository>();
 
 var app = builder.Build();
 
