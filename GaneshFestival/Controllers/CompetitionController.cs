@@ -60,7 +60,7 @@ namespace GaneshFestival.Controllers
             BaseResponseStatus responseDetails = new BaseResponseStatus();
             try
             {
-                logger.LogDebug(string.Format("CompetitionController-getAll : Calling getAll"));
+                logger.LogDebug(string.Format("CompetitionController-getAll : Calling GetZPGATName"));
                 var durations = await competitionAsyncRepository.GetZPGATName();
 
                 if (durations.Count == 0)
