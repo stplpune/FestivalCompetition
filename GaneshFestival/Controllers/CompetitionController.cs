@@ -1,31 +1,31 @@
-﻿using GaneshFestival.Model;
-using GaneshFestival.Repository.Interface;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Http;
+using GaneshFestival.Model;
+using GaneshFestival.Repository.Interface;
 namespace GaneshFestival.Controllers
 {
-    [Route("GaneshFestival/Competition")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CompetitionController : ControllerBase
     {
         private readonly ILogger logger;
-        private readonly ICompetitionAsyncRepository CompetitionAsyncRepository;
+        private readonly ICompetitionAsyncRepository competitionAsyncRepository;
         IConfiguration configuration;
-        public CompetitionController(IConfiguration configuration, ILoggerFactory loggerFactory, ICompetitionAsyncRepository masterAsyncRepository)
+        public CompetitionController(IConfiguration configuration, ILoggerFactory loggerFactory, ICompetitionAsyncRepository competitionAsyncRepository)
         {
             this.logger = loggerFactory.CreateLogger<CompetitionController>();
-            this.CompetitionAsyncRepository = CompetitionAsyncRepository;
+            this.competitionAsyncRepository = competitionAsyncRepository;
             this.configuration = configuration;
         }
-        [HttpGet("GetAllEmployement")]
-        public async Task<ActionResult> GetAllEmployement()
+        [HttpGet("GetCompetitionName")]
+        public async Task<ActionResult> GetCompetitionName()
         {
             BaseResponseStatus responseDetails = new BaseResponseStatus();
             try
             {
                 logger.LogDebug(string.Format("CompetitionController-getAll : Calling getAll"));
-                var durations = await CompetitionAsyncRepository.GetCompetitionName();
+                var durations = await competitionAsyncRepository.GetCompetitionName();
 
                 if (durations.Count == 0)
                 {
@@ -36,7 +36,7 @@ namespace GaneshFestival.Controllers
                     return Ok(responseDetails);
                 }
                 var rtrMsg = string.Format("All  records are fetched successfully.");
-                logger.LogDebug("MasterController-getAll : Completed Get action all getAll records.");
+                logger.LogDebug("CompetitionController-getAll : Completed Get action all getAll records.");
                 responseDetails.StatusCode = StatusCodes.Status200OK.ToString();
                 responseDetails.StatusMessage = rtrMsg;
                 responseDetails.ResponseData = durations;
@@ -53,5 +53,7 @@ namespace GaneshFestival.Controllers
             }
             return Ok(responseDetails);
         }
+
+
     }
 }

@@ -13,16 +13,16 @@ namespace GaneshFestival.Repository
 
         public async Task<List<CompetitionModel>> GetCompetitionName()
         {
-            List<CompetitionModel> employmentModels = new List<CompetitionModel>();
+            List<CompetitionModel> competitions = new List<CompetitionModel>();
 
             using (DbConnection dbConnection = sqlreaderConnection)
             {
                 await dbConnection.OpenAsync();
                 var query = @"select Id,CompetitionName from tblCompetitionType where IsDeleted=0";
-                var employment = await dbConnection.QueryAsync<CompetitionModel>(query);
-                employmentModels = employment.ToList();
+                var comptition = await dbConnection.QueryAsync<CompetitionModel>(query);
+                competitions = comptition.ToList();
             }
-            return employmentModels;
+            return competitions;
         }
        
     }
