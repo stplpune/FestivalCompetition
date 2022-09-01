@@ -25,9 +25,9 @@ namespace GaneshFestival.Repository
             {
                    
 
-                     var query = @"Insert into tblcompetition (CompetitionTypeId,ZPGATId,ClientId, VillageName,PersonName,Amount,   
+                     var query = @"Insert into tblcompetition (CompetitionTypeId,ZPGATId,ClientId, VillageName,PersonName,MobileNo,Amount,   
                                           PaymentScreenPath,VideoPath,PaymentId,PaymentStatus,Remark,Marks,MoreInfo,CreatedBy,CreatedDate,IsDeleted)
-                                          values(@CompetitionTypeId,@ZPGATId,@ClientId, @VillageName,@PersonName,@Amount,@PaymentScreenPath,@VideoPath,@PaymentId   
+                                          values(@CompetitionTypeId,@ZPGATId,@ClientId, @VillageName,@PersonName,@MobileNo,@Amount,@PaymentScreenPath,@VideoPath,@PaymentId   
                                           ,@PaymentStatus,@Remark,@Marks,@MoreInfo,@CreatedBy,@CreatedDate,0)
                                           SELECT CAST(SCOPE_IDENTITY() as bigint)";
                 var id = await dbConnection.QuerySingleAsync<int>(query, competition);

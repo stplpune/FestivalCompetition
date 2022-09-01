@@ -23,6 +23,7 @@
         public string Remark { get; set; }
         public decimal Marks { get; set; }
         public string MoreInfo { get; set; }
+         public string MobileNo { get; set; }
         public List<CompetitionMember> CompetitionMembers { get; set; }
         public List<CompettionImages> CompettionImage { get; set; }
         public override string Key => $"{this.Id}";
