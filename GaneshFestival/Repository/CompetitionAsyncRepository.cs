@@ -24,6 +24,20 @@ namespace GaneshFestival.Repository
             }
             return competitions;
         }
-       
+
+        public async Task<List<ZPGATModel>> GetZPGATName()
+        {
+            List<ZPGATModel> zPGATModels = new List<ZPGATModel>();
+
+            using (DbConnection dbConnection = sqlreaderConnection)
+            {
+                await dbConnection.OpenAsync();
+                var query = @"select Id,ZPGATName,ClientId from tblZPGATMaster where IsDeleted=0";
+                var zPGATs = await dbConnection.QueryAsync<ZPGATModel>(query);
+                zPGATModels = zPGATs.ToList();
+            }
+            return zPGATModels;
+
+        }
     }
 }
