@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Text;
 using XSystem.Security.Cryptography;
 
+
 namespace GaneshFestival.Repository
 {
     public class CompetitionPaymentAsyncRepository : BaseAsyncRepository, ICompetitionPaymentAsyncRepository
@@ -848,5 +849,26 @@ namespace GaneshFestival.Repository
             }
             return returnMsg;
         }
+        public async Task<long> UpdatePaymentStatus(PaymentStatusModel payment)
+        {
+            var query = "";
+            long result = 0;
+            using (DbConnection dbConnection = sqlreaderConnection)
+            {
+                query = @"Update tblCompetition set PaymentId =@PaymentId and PaymentStatus=@PaymentStatus where Id=@CompetitionId ";
+                result = await dbConnection.ExecuteAsync(query, new { Id = payment.CompetitionId, PaymentId = payment.PaymentId, PaymentStatus = payment.PaymentStatus });
+
+                    query = @"Insert into tblPaymentResponse(PaymentId,payuMoneyId,amount,status,ResponseStr,isdeleted) VALUES (
+                                           @PaymentId,@payuMoneyId,@amount,@PaymentStatus,@ResponseStr,0)";
+                    result = await dbConnection.ExecuteAsync(query, new {  PaymentId = payment.PaymentId, PaymentStatus = payment.PaymentStatus, payuMoneyId = payment.payuMoneyId, amount = payment.amount, ResponseStr=payment.ResponseStr });
+                
+            }
+            return result;
+        }
+
+  
+        
+
+        
     }
 }

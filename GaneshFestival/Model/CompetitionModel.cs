@@ -28,5 +28,13 @@
         public List<CompettionImages> CompettionImage { get; set; }
         public override string Key => $"{this.Id}";
     }
-
+    public class PaymentStatusModel
+    {
+        public long CompetitionId { get; set; }
+        public string PaymentId { get; set; }
+        public string PaymentStatus { get; set; }
+        public string payuMoneyId { get; set; }
+         public decimal amount { get; set; }
+         public string ResponseStr { get; set; }
+    }
 }

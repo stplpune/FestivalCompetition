@@ -6,6 +6,6 @@ namespace GaneshFestival.Repository.Interface
     {
         Task<ReturnMsg> SaveUpdateVehiclePayment(VehiclePayment vehiclePayment);
         Task<hashandTranid> PaymentGateway_Hash(HashModel hashModels);
-
+        public Task<long> UpdatePaymentStatus(PaymentStatusModel payment);
     }
 }
