@@ -30,6 +30,7 @@ namespace GaneshFestival.Controllers
                 if (login.Id==0)
                 {
                     var returnMsg = string.Format("Incorrect Username or Password.");
+
                     logger.LogInformation(returnMsg);
                     responseDetails.StatusCode = StatusCodes.Status404NotFound.ToString();
                     responseDetails.StatusMessage = returnMsg;
