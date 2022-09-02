@@ -64,7 +64,7 @@ namespace GaneshFestival.Repository
             using (DbConnection dbConnection = sqlreaderConnection)
             {
                 await dbConnection.OpenAsync();
-                var query = @"select Id,ZPGATName,ClientId from tblZPGATMaster where IsDeleted=0 ";
+                var query = @"select Id,ZPGATName,ClientId,IsCity from tblZPGATMaster where IsDeleted=0 ";
                 var zPGATs = await dbConnection.QueryAsync<ZPGATModel>(query);
                 zPGATModels = zPGATs.ToList();
             }
