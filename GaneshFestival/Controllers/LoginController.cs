@@ -25,9 +25,9 @@ namespace GaneshFestival.Controllers
             try
             {
                 logger.LogDebug(string.Format("Login_1_0- : Calling Login_1_0"));
-                var durations = await loginAsyncrepository.Login_1_0(UserName, Password);
+                var login = await loginAsyncrepository.Login_1_0(UserName, Password);
 
-                if (durations.Id==0)
+                if (login.Id==0)
                 {
                     var returnMsg = string.Format("Incorrect Username or Password.");
                     logger.LogInformation(returnMsg);
@@ -39,7 +39,7 @@ namespace GaneshFestival.Controllers
                 logger.LogDebug("Login_1_0");
                 responseDetails.StatusCode = StatusCodes.Status200OK.ToString();
                 responseDetails.StatusMessage = rtrMsg;
-                responseDetails.ResponseData = durations;
+                responseDetails.ResponseData = login;
             }
             catch (Exception ex)
             {
