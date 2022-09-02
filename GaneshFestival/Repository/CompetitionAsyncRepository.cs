@@ -112,7 +112,7 @@ namespace GaneshFestival.Repository
 
                             images.CompetitionId = id;
                             var query1 = @"Insert into tblCompetitionImages(CompetitionId,ImagePath,IsMainImage,IsImage,IsDeleted)
-                                       values(@EventId,@ImagePath,@IsMainImage,@IsImage,0)";
+                                       values(@CompetitionId,@ImagePath,@IsMainImage,@IsImage,0)";
                             var res = await dbConnection.ExecuteAsync(query1, images);
                         }
                         catch (Exception) { }
