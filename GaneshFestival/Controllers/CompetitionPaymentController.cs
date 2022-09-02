@@ -97,7 +97,6 @@ namespace GaneshFestival.Controllers
                 {
                     var returnStr = string.Format("Payment Done.");
                     logger.LogInformation(returnStr);
-                    logger.LogDebug(string.Format("LiveBidController-ExtendTime : Completed Extending time of record with Id."));
                     responseDetails.StatusCode = StatusCodes.Status200OK.ToString();
                     responseDetails.StatusMessage = returnStr;
                     responseDetails.ResponseData = ExtendTime;

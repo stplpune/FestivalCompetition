@@ -855,8 +855,8 @@ namespace GaneshFestival.Repository
             long result = 0;
             using (DbConnection dbConnection = sqlreaderConnection)
             {
-                query = @"Update tblCompetition set PaymentId =@PaymentId and PaymentStatus=@PaymentStatus where Id=@CompetitionId ";
-                result = await dbConnection.ExecuteAsync(query, new { Id = payment.CompetitionId, PaymentId = payment.PaymentId, PaymentStatus = payment.PaymentStatus });
+                query = @"Update tblCompetition set PaymentId =@PaymentId , PaymentStatus=@PaymentStatus where Id=@CompetitionId ";
+                result = await dbConnection.ExecuteAsync(query, new { CompetitionId = payment.CompetitionId, PaymentId = payment.PaymentId, PaymentStatus = payment.PaymentStatus });
 
                     query = @"Insert into tblPaymentResponse(PaymentId,payuMoneyId,amount,status,ResponseStr,isdeleted) VALUES (
                                            @PaymentId,@payuMoneyId,@amount,@PaymentStatus,@ResponseStr,0)";
