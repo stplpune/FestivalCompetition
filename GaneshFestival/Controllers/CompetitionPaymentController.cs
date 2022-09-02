@@ -86,7 +86,7 @@ namespace GaneshFestival.Controllers
             }
         }
 
-        [HttpPut("UpdatePaymentStatus")]
+        [HttpPost("UpdatePaymentStatus")]
         public async Task<IActionResult> UpdatePaymentStatus(PaymentStatusModel payment)
         {
             BaseResponseStatus responseDetails = new BaseResponseStatus();

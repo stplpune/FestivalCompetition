@@ -5,5 +5,7 @@
         public long Id { get; set; }
         public string ZPGATName { get; set; }
         public long ClientId { get; set; }
+        public int IsCity { get; set; }
+
     }
 }
