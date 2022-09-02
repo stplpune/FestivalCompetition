@@ -7,5 +7,6 @@ namespace GaneshFestival.Repository.Interface
         public Task<List<CompetitionNameModel>> GetCompetitionName();
         public Task<List<ZPGATModel>> GetZPGATName();
         public Task<long> AddCompetiton(CompetitionModel competition);
+        Task<long> AddCompettionImages(long id, List<CompettionImages> compettionImages);
     }
 }
