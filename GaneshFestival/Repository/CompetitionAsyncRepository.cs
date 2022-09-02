@@ -71,6 +71,29 @@ namespace GaneshFestival.Repository
             return zPGATModels;
 
         }
+        public async Task<long> AddCompettionImages(long id,List<CompettionImages> compettionImages)
+        {
+            int result = 0;
+            using (DbConnection dbConnection = sqlreaderConnection)
+            {
+                {
+                    foreach (CompettionImages images in compettionImages)
+                    {
+                        try
+                        {
+
+                            images.CompetitionId = id;
+                            var query1 = @"Insert into tblCompetitionImages(CompetitionId,ImagePath,IsMainImage,IsImage,IsDeleted)
+                                       values(@CompetitionId,@ImagePath,@IsMainImage,@IsImage,0)";
+                            var res = await dbConnection.ExecuteAsync(query1, images);
+                        }
+                        catch (Exception) { }
+                    }
+                }
+                return result;
+            }
+
+        }
         public async Task<long> AddCompetitionMember(long id, List<CompetitionMember> CompetitionMembers)
         {
 
@@ -99,29 +122,7 @@ namespace GaneshFestival.Repository
             }
 
         }
-        public async Task<long> AddCompettionImages(long id, List<CompettionImages> compettionImages)
-        {
-            int result = 0;
-            using (DbConnection dbConnection = sqlreaderConnection)
-            {
-                {
-                    foreach (CompettionImages images in compettionImages)
-                    {
-                        try
-                        {
-
-                            images.CompetitionId = id;
-                            var query1 = @"Insert into tblCompetitionImages(CompetitionId,ImagePath,IsMainImage,IsImage,IsDeleted)
-                                       values(@CompetitionId,@ImagePath,@IsMainImage,@IsImage,0)";
-                            var res = await dbConnection.ExecuteAsync(query1, images);
-                        }
-                        catch (Exception) { }
-                    }
-                }
-                return result;
-            }
-
-        }
+    
 
 
     }
