@@ -2,6 +2,7 @@
 using GaneshFestival.Model;
 using GaneshFestival.Repository.Interface;
 using System.Data.Common;
+using System.Diagnostics.Metrics;
 
 namespace GaneshFestival.Repository
 {
@@ -19,13 +20,13 @@ namespace GaneshFestival.Repository
 
             int result = 0;
             string str_skill = "";
-            string str_qua = "";         
+            string str_qua = "";
 
             using (DbConnection dbConnection = sqlreaderConnection)
             {
-                   
 
-                     var query = @"Insert into tblcompetition (CompetitionTypeId,ZPGATId,ClientId, VillageName,PersonName,MobileNo,Amount,   
+
+                var query = @"Insert into tblcompetition (CompetitionTypeId,ZPGATId,ClientId, VillageName,PersonName,MobileNo,Amount,   
                                           PaymentScreenPath,VideoPath,PaymentId,PaymentStatus,Remark,Marks,MoreInfo,CreatedBy,CreatedDate,IsDeleted)
                                           values(@CompetitionTypeId,@ZPGATId,@ClientId, @VillageName,@PersonName,@MobileNo,@Amount,@PaymentScreenPath,@VideoPath,@PaymentId   
                                           ,@PaymentStatus,@Remark,@Marks,@MoreInfo,@CreatedBy,@CreatedDate,0)
@@ -71,7 +72,7 @@ namespace GaneshFestival.Repository
             return zPGATModels;
 
         }
-        public async Task<long> AddCompettionImages(long id,List<CompettionImages> compettionImages)
+        public async Task<long> AddCompettionImages(long id, List<CompettionImages> compettionImages)
         {
             int result = 0;
             using (DbConnection dbConnection = sqlreaderConnection)
@@ -85,7 +86,7 @@ namespace GaneshFestival.Repository
                             images.CompetitionId = id;
                             var query1 = @"Insert into tblCompetitionImages(CompetitionId,ImagePath,IsMainImage,IsImage,IsDeleted)
                                        values(@CompetitionId,@ImagePath,@IsMainImage,@IsImage,0)";
-                            var res = await dbConnection.ExecuteAsync(query1, images);
+                            var res = await dbConnection.ExecuteAsync(query1);
                         }
                         catch (Exception) { }
                     }
@@ -122,7 +123,136 @@ namespace GaneshFestival.Repository
             }
 
         }
-    
+
+        public async Task<List<clsCompetitionData>> GetCompetitionData(int CompetitionTypeId, int ZPGATId,
+            string? SearhchText, int ClientId, int PageNo)
+        {
+            List<clsCompetitionData> competitions = new List<clsCompetitionData>();
+            SearhchText = SearhchText == null ? "" : SearhchText;
+            using (DbConnection dbConnection = sqlreaderConnection)
+            {
+                await dbConnection.OpenAsync();
+                var query = @"SELECT c.Id as Id,c.CompetitionTypeId as CompetitionTypeId,c.ZPGATId as ZPGATId,
+               c.ClientId as ClientId,c.VillageName as VillageName,c.PersonName as PersonName,c.Amount as Amount,
+               c.PaymentScreenPath as PaymentScreenPath,
+                c.VideoPath as VideoPath,c.PaymentId as PaymentId,c.PaymentStatus as PaymentStatus,
+               c.Remark as Remark,c.Marks as Marks,c.MoreInfo as MoreInfo,
+                convert(varchar(20),c.CreatedDate,105) as CreatedDate,c.MobileNo as MobileNo,
+                t.CompetitionName as CompetitionType,g.ZPGATName as ZPGAT
+                FROM tblCompetition c 
+                inner join tblPaymentResponse r on (c.Id=r.PaymentId)
+                inner join tblCompetitionType t on (c.CompetitionTypeId=t.Id)
+                inner join tblZPGATMaster g on (c.ZPGATId=g.Id) where c.isdeleted=0 and r.status='success'
+               and (@CompetitionTypeId=0 or c.CompetitionTypeId=@CompetitionTypeId)
+                and (@ZPGATId=0 or c.ZPGATId=@ZPGATId)
+                and c.ClientId=@ClientId
+               and (@SearhchText='' or c.PersonName like concat('%',@SearhchText,'%')
+                  or c.MobileNo like concat('%',@SearhchText,'%'))";
+
+                var comptition = await dbConnection.QueryAsync<clsCompetitionData>(query,
+                    new
+                    {
+                        CompetitionTypeId = CompetitionTypeId,
+                        ZPGATId = ZPGATId,
+                        SearhchText = SearhchText,
+                        ClientId = ClientId
+                    });
+                competitions = comptition.ToList();
+            }
+            return competitions;
+        }
+
+
+
+        public async Task<clsCompetitionOtherData> GetOtherCompetitionData(long CompetitionId)
+        {
+            clsCompetitionOtherData obj_othercompetitionData = new clsCompetitionOtherData();
+
+            List<clsMemberData> memberlist = new List<clsMemberData>();
+            List<ClsImageData> imagelist = new List<ClsImageData>();
+
+            using (DbConnection dbConnection = sqlreaderConnection)
+            {
+                await dbConnection.OpenAsync();
+
+                // image
+                var query = @"SELECT ImagePath FROM tblCompetitionImages where CompetitionId=@CompetitionId and isdeleted=0";
+
+                var imglist = await dbConnection.QueryAsync<ClsImageData>(query,
+                    new
+                    {
+                        CompetitionId = CompetitionId
+                    });
+                imagelist = imglist.ToList();
+
+
+
+                // member
+                var querym = @"SELECT (case when DesignationId=1 then N'अध्यक्ष' 
+                        when DesignationId=2 then N'उपाध्यक्ष' else N'सदस्य' end) as DesignationName,DesignationId
+                        ,PersonName ,MobileNo FROM tblCompetitionMembers where CompetitionId=@CompetitionId and isdeleted=0";
+
+                var memberlst = await dbConnection.QueryAsync<clsMemberData>(querym,
+                    new
+                    {
+                        CompetitionId = CompetitionId
+                    });
+                memberlist = memberlst.ToList();
+
+
+                obj_othercompetitionData.ImageList = imagelist;
+                obj_othercompetitionData.MemberList = memberlist;
+
+
+            }
+            return obj_othercompetitionData;
+        }
+
+        public async Task<List<clsDashboardData>> GetDashboardCount(int ClientId)
+        {
+            List<clsDashboardData> obj_dashboardcount = new List<clsDashboardData>();
+            using (DbConnection dbConnection = sqlreaderConnection)
+            {
+                await dbConnection.OpenAsync();
+                var query = @"select ROW_NUMBER() over(order by tblZPGATMaster.id) as SrNo,tblZPGATMaster.ZPGATName,
+                        (select count(id) from tblCompetition where tblCompetition.ZPGATId=tblZPGATMaster.Id and 
+                        tblCompetition.IsDeleted=0 and tblCompetition.PaymentStatus='success' and CompetitionTypeId=1) as MandalCount,
+                        (select count(id) from tblCompetition where tblCompetition.ZPGATId=tblZPGATMaster.Id and 
+                        tblCompetition.IsDeleted=0 and tblCompetition.PaymentStatus='success' and CompetitionTypeId=2) as PersonalCount
+                        from tblZPGATMaster 
+                        where ClientId=@ClientId";
+
+                var comptition = await dbConnection.QueryAsync<clsDashboardData>(query,
+                    new
+                    {
+                        ClientId = ClientId
+                    });
+                obj_dashboardcount = comptition.ToList();
+            }
+            return obj_dashboardcount;
+        }
+
+
+        public async Task<long> UpdateMarks(long CompetitionId, decimal Marks, string Remark)
+        {
+            using (DbConnection dbConnection = sqlreaderConnection)
+            {
+                await dbConnection.OpenAsync();
+                var query = @"update tblCompetition set Marks=@Marks ,Remark=@Remark
+                        where Id=@CompetitionId";
+
+                var res = await dbConnection.ExecuteAsync(query,
+                    new
+                    {
+                        CompetitionId = CompetitionId,
+                        Marks = Marks,
+                        Remark = Remark
+                    });
+
+
+            }
+            return 1;
+        }
 
 
     }

@@ -127,6 +127,165 @@ namespace GaneshFestival.Controllers
             }
         }
 
+        [HttpGet("GetCompetitionData")]
+        public async Task<ActionResult> GetCompetitionData(int CompetitionTypeId,
+            int ZPGATId, string? SearhchText, int ClientId, int PageNo)
+        {
+            BaseResponseStatus responseDetails = new BaseResponseStatus();
+            try
+            {
+                var jobpostdetails = await competitionAsyncRepository.GetCompetitionData(CompetitionTypeId, ZPGATId,
+                    SearhchText, ClientId, PageNo);
+
+                if (jobpostdetails != null)
+                {
+                    var returnStr = string.Format("Data fetch Succesfully..");
+                    logger.LogInformation(returnStr);
+                    logger.LogDebug(string.Format("CompetitionController-Create : Completed Adding record with Id."));
+                    responseDetails.StatusCode = StatusCodes.Status200OK.ToString();
+                    responseDetails.StatusMessage = returnStr;
+                    responseDetails.ResponseData = jobpostdetails;
+                    return Ok(responseDetails);
+                }
+                else
+                {
+                    var msgStr = string.Format("Error while getting record.");
+                    logger.LogInformation(msgStr);
+                    responseDetails.StatusCode = StatusCodes.Status409Conflict.ToString();
+                    responseDetails.StatusMessage = msgStr;
+                    return Ok(responseDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                //log error
+                logger.LogError(ex.Message);
+                var returnMsg = string.Format(ex.Message);
+                logger.LogInformation(returnMsg);
+                responseDetails.StatusCode = StatusCodes.Status409Conflict.ToString();
+                responseDetails.StatusMessage = returnMsg;
+                return Ok(responseDetails);
+            }
+        }
+
+
+        [HttpGet("GetOtherCompetitionData")]
+        public async Task<ActionResult> GetOtherCompetitionData(int CompetitionId)
+        {
+            BaseResponseStatus responseDetails = new BaseResponseStatus();
+            try
+            {
+                var jobpostdetails = await competitionAsyncRepository.GetOtherCompetitionData(CompetitionId);
+
+                if (jobpostdetails != null)
+                {
+                    var returnStr = string.Format("Data fetch Succesfully..");
+                    logger.LogInformation(returnStr);
+                    logger.LogDebug(string.Format("CompetitionController-Create : Completed Adding record with Id."));
+                    responseDetails.StatusCode = StatusCodes.Status200OK.ToString();
+                    responseDetails.StatusMessage = returnStr;
+                    responseDetails.ResponseData = jobpostdetails;
+                    return Ok(responseDetails);
+                }
+                else
+                {
+                    var msgStr = string.Format("Error while getting record.");
+                    logger.LogInformation(msgStr);
+                    responseDetails.StatusCode = StatusCodes.Status409Conflict.ToString();
+                    responseDetails.StatusMessage = msgStr;
+                    return Ok(responseDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                //log error
+                logger.LogError(ex.Message);
+                var returnMsg = string.Format(ex.Message);
+                logger.LogInformation(returnMsg);
+                responseDetails.StatusCode = StatusCodes.Status409Conflict.ToString();
+                responseDetails.StatusMessage = returnMsg;
+                return Ok(responseDetails);
+            }
+        }
+
+        [HttpGet("GetDashboardCount")]
+        public async Task<ActionResult> GetDashboardCount(int ClientId)
+        {
+            BaseResponseStatus responseDetails = new BaseResponseStatus();
+            try
+            {
+                var jobpostdetails = await competitionAsyncRepository.GetDashboardCount(ClientId);
+
+                if (jobpostdetails != null)
+                {
+                    var returnStr = string.Format("Data fetch Succesfully..");
+                    logger.LogInformation(returnStr);
+                    logger.LogDebug(string.Format("CompetitionController-Create : Completed Adding record with Id."));
+                    responseDetails.StatusCode = StatusCodes.Status200OK.ToString();
+                    responseDetails.StatusMessage = returnStr;
+                    responseDetails.ResponseData = jobpostdetails;
+                    return Ok(responseDetails);
+                }
+                else
+                {
+                    var msgStr = string.Format("Error while getting record.");
+                    logger.LogInformation(msgStr);
+                    responseDetails.StatusCode = StatusCodes.Status409Conflict.ToString();
+                    responseDetails.StatusMessage = msgStr;
+                    return Ok(responseDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                //log error
+                logger.LogError(ex.Message);
+                var returnMsg = string.Format(ex.Message);
+                logger.LogInformation(returnMsg);
+                responseDetails.StatusCode = StatusCodes.Status409Conflict.ToString();
+                responseDetails.StatusMessage = returnMsg;
+                return Ok(responseDetails);
+            }
+        }
+
+        [HttpPost("UpdateMarks")]
+        public async Task<ActionResult> UpdateMarks(long CompetitionId, decimal Marks, string Remark)
+        {
+            BaseResponseStatus responseDetails = new BaseResponseStatus();
+            try
+            {
+                var returndata = await competitionAsyncRepository.UpdateMarks(CompetitionId, Marks, Remark);
+
+                if (returndata > 0)
+                {
+                    var returnStr = string.Format("Data Saved Succesfully..");
+                    logger.LogInformation(returnStr);
+                    logger.LogDebug(string.Format("CompetitionController-Create : Completed Adding record with Id."));
+                    responseDetails.StatusCode = StatusCodes.Status200OK.ToString();
+                    responseDetails.StatusMessage = returnStr;
+                    responseDetails.ResponseData = "";
+                    return Ok(responseDetails);
+                }
+                else
+                {
+                    var msgStr = string.Format("Error while getting record.");
+                    logger.LogInformation(msgStr);
+                    responseDetails.StatusCode = StatusCodes.Status409Conflict.ToString();
+                    responseDetails.StatusMessage = msgStr;
+                    return Ok(responseDetails);
+                }
+            }
+            catch (Exception ex)
+            {
+                //log error
+                logger.LogError(ex.Message);
+                var returnMsg = string.Format(ex.Message);
+                logger.LogInformation(returnMsg);
+                responseDetails.StatusCode = StatusCodes.Status409Conflict.ToString();
+                responseDetails.StatusMessage = returnMsg;
+                return Ok(responseDetails);
+            }
+        }
+
 
     }
 }
