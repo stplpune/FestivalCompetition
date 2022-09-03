@@ -188,9 +188,27 @@ namespace GaneshFestival.Repository
 
 
                 // member
-                var querym = @"SELECT distinct (case when DesignationId=1 then N'अध्यक्ष' 
-                        when DesignationId=2 then N'उपाध्यक्ष' else N'सदस्य' end) as DesignationName,DesignationId
-                        ,PersonName ,MobileNo FROM tblCompetitionMembers where CompetitionId=@CompetitionId and isdeleted=0";
+                //  var querym = @"SELECT distinct (case when DesignationId=1 then N'अध्यक्ष' 
+                // when DesignationId = 2 then N'उपाध्यक्ष' else N'सदस्य' end) as DesignationName,DesignationId
+                //          ,PersonName ,MobileNo FROM tblCompetitionMembers where CompetitionId=@CompetitionId and isdeleted=0";
+
+
+
+                var querym = @"SELECT top 1(case when DesignationId = 1 then N'अध्यक्ष'
+                        when DesignationId = 2 then N'उपाध्यक्ष' else N'सदस्य' end) as DesignationName,DesignationId
+                        ,PersonName ,MobileNo FROM tblCompetitionMembers
+                        where CompetitionId = @CompetitionId and DesignationId = 1 and isdeleted = 0
+                        union all
+                        SELECT top 1(case when DesignationId = 1 then N'अध्यक्ष'
+                        when DesignationId = 2 then N'उपाध्यक्ष' else N'सदस्य' end) as DesignationName,DesignationId
+                        ,PersonName ,MobileNo FROM tblCompetitionMembers
+                        where CompetitionId = @CompetitionId and DesignationId = 2 and isdeleted = 0
+                        union all
+                        SELECT(case when DesignationId = 1 then N'अध्यक्ष'
+                        when DesignationId = 2 then N'उपाध्यक्ष' else N'सदस्य' end) as DesignationName,DesignationId
+                        ,PersonName ,MobileNo FROM tblCompetitionMembers
+                        where CompetitionId = @CompetitionId and DesignationId = 3 and isdeleted = 0";
+
 
                 var memberlst = await dbConnection.QueryAsync<clsMemberData>(querym,
                     new
