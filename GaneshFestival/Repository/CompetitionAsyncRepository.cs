@@ -188,7 +188,7 @@ namespace GaneshFestival.Repository
 
 
                 // member
-                var querym = @"SELECT (case when DesignationId=1 then N'अध्यक्ष' 
+                var querym = @"SELECT distinct (case when DesignationId=1 then N'अध्यक्ष' 
                         when DesignationId=2 then N'उपाध्यक्ष' else N'सदस्य' end) as DesignationName,DesignationId
                         ,PersonName ,MobileNo FROM tblCompetitionMembers where CompetitionId=@CompetitionId and isdeleted=0";
 
